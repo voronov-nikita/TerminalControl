@@ -1,16 +1,12 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, View} from 'react-native';
+import { SafeAreaView } from 'react-native';
 
-import Header from './components/Header';
-import { main } from './styles/style';
+import MainStack from './components/navigation';
 
 
 export default function App() {
 
-
   return (
-    <SafeAreaView>
-      <Header />
-    </SafeAreaView>
+    <MainStack />
   );
 }
