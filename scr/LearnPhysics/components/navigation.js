@@ -1,6 +1,6 @@
 import React from 'react';
-import Main from './components/MainScreen';
-import Second from './components/SecondScreen';
+import Main from './MainScreen';
+import Second from './SecondScreen';
 
 import { createStackNavigation } from '@react-navigation/stack';
 import { NavigationContainer  } from '@react-navigation/native';
