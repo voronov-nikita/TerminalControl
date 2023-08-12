@@ -1,39 +1,59 @@
-// ignore_for_file: avoid_print, prefer_const_constructors, unnecessary_string_interpolations, use_key_in_widget_constructors
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 
 
-void main(){
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget{
+class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
-  Widget build(BuildContext context){
-    String str="o";
-    return MaterialApp(
-      title: "Hello",
-      theme: ThemeData(primaryColor: Colors.amber),
-      home: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: Text("Hello"),
-          backgroundColor: Colors.black38,
-        ),
-        body: Center(
-          child: Text('$str', style: TextStyle(
-            fontSize: 48,
-            fontFamily: 'Times New Roman',
-            color: Colors.white,
-            )
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => print("click"),
-          backgroundColor: Colors.red,
-          child: Text('Ok'),
-        ),
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: Text('My App'),
+      centerTitle: true,
+      backgroundColor: const Color.fromARGB(255, 152, 34, 25),
+      titleTextStyle: TextStyle(
+        color: Color.fromARGB(255, 0, 145, 171)
       ),
     );
   }
+}
+
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Text(
+          'Welcome to my app!', 
+          style: TextStyle(
+            color: Colors.white,
+            backgroundColor: Colors.amber,
+          ),
+          ),
+      ),
+    );
+  }
+}
+
+
+class MyCompleteApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "BigMafia",
+      home: Scaffold(
+        appBar: MyAppBar(),
+        body: MyHomePage(),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(MyCompleteApp());
 }
