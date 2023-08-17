@@ -32,7 +32,7 @@ class MyHomePage extends StatelessWidget {
           'Welcome to my app!', 
           style: TextStyle(
             color: Colors.white,
-            backgroundColor: Colors.amber,
+            fontSize: 50,
           ),
           ),
       ),
