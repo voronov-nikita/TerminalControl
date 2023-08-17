@@ -32,10 +32,6 @@ migrate_working_dir/
 .pub/
 /build/
 
-
-# Other trash
-/other/
-
 # Symbolication related
 app.*.symbols
 
