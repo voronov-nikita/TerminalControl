@@ -1,32 +1,49 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QHBoxLayout
-from PyQt5.QtCore import QRect
-import sys
+import argparse
 
+def calculator(operation, operands):
+    if operation == 'ssh':
+        print("SSH")
+        return 
+    elif operation == 'subtract':
+        result = operands[0]
+        for operand in operands[1:]:
+            result -= operand
+        return result
+    elif operation == 'multiply':
+        result = 1
+        for operand in operands:
+            result *= operand
+        return result
+    elif operation == 'divide':
+        result = operands[0]
+        for operand in operands[1:]:
+            if operand != 0:
+                result /= operand
+            else:
+                raise ValueError("Division by zero is not allowed.")
+        return result
+    else:
+        raise ValueError("Unsupported operation")
 
+def main():
+    parser = argparse.ArgumentParser(description='Simple Calculator')
 
-class MainApp(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        
-        self.windowSize = (900, 600)
-        self.windowName = "Terminal Control"
-        
-        self.buttonSize = (200, 200)
-        
-        self.InitUI()
-        
-    def InitUI(self):
-        self.setGeometry(QRect(self.width(), self.height()//2, *self.windowSize))
-        self.setFixedSize(self.width(), self.height())
-        self.setWindowTitle(self.windowName)
-        
-        
-        
+    # Добавление позиционного аргумента для операции
+    parser.add_argument('operation', choices=['ssh', 'subtract', 'multiply', 'divide'], help='Operation to perform')
 
+    # Добавление аргумента для операндов (может быть несколько)
+    parser.add_argument('operands', type=float, nargs='+', help='Operands for the operation')
 
-if __name__=="__main__":
-    app = QApplication(sys.argv)
-    ex = MainApp()
-    ex.show()
-    app.exec_()
-    
+    # Разбор аргументов
+    args = parser.parse_args()
+
+    # Вызов калькулятора с переданными аргументами
+    try:
+        result = calculator(args.operation, args.operands)
+        if result is not None:
+            print(f"Result of {args.operation}:", result)
+    except ValueError as e:
+        print(f"Error: {e}")
+
+if __name__ == '__main__':
+    main()
