@@ -1,49 +1,30 @@
 import argparse
+import json
+import os
 
-def calculator(operation, operands):
-    if operation == 'ssh':
-        print("SSH")
-        return 
-    elif operation == 'subtract':
-        result = operands[0]
-        for operand in operands[1:]:
-            result -= operand
-        return result
-    elif operation == 'multiply':
-        result = 1
-        for operand in operands:
-            result *= operand
-        return result
-    elif operation == 'divide':
-        result = operands[0]
-        for operand in operands[1:]:
-            if operand != 0:
-                result /= operand
-            else:
-                raise ValueError("Division by zero is not allowed.")
-        return result
-    else:
-        raise ValueError("Unsupported operation")
+JSON_FILE:str = "mac.json"
 
-def main():
-    parser = argparse.ArgumentParser(description='Simple Calculator')
 
-    # Добавление позиционного аргумента для операции
-    parser.add_argument('operation', choices=['ssh', 'subtract', 'multiply', 'divide'], help='Operation to perform')
+def parsejson(file:str) -> dict:
+    '''
+    A function that returns a dictionary with all the data from the passed json file.
+    
+    It is better to immediately use a call to some part of the dictionary object. 
+    This is due to the fact that objects can be quite large, 
+    
+    it is recommended to know about their sizes and data in them in advance.
+    '''
+    text = ''.join(open(file, 'r').readlines())
+    return json.loads(text)
 
-    # Добавление аргумента для операндов (может быть несколько)
-    parser.add_argument('operands', type=float, nargs='+', help='Operands for the operation')
 
-    # Разбор аргументов
-    args = parser.parse_args()
+class SystemMethods():
+    def __init__(self):
+        '''
+        A class that stores all the methods that 
+        can be called during the operation of the application.
+        '''
 
-    # Вызов калькулятора с переданными аргументами
-    try:
-        result = calculator(args.operation, args.operands)
-        if result is not None:
-            print(f"Result of {args.operation}:", result)
-    except ValueError as e:
-        print(f"Error: {e}")
-
-if __name__ == '__main__':
-    main()
+    def openbrowser(self, link):
+        os.system(f"xdg-open {link}")
+        return
