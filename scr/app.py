@@ -34,8 +34,7 @@ class NetworkActions():
 class App(QMainWindow):
     def __init__(self):
         super().__init__()
-        
-        uic.loadUi("interface.ui", self)
+
         self.actions = NetworkActions()
         
         self.windowName = "Terminal Control"
@@ -45,6 +44,8 @@ class App(QMainWindow):
         self.initUI()
         
     def initUI(self):
+        
+        uic.loadUi("interface.ui", self)
         self.setWindowTitle(self.windowName)
         self.setFixedSize(self.width(), self.height())
         

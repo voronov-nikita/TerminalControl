@@ -1,4 +1,5 @@
-import os
+from fabric import Connection
 
+conn = Connection("vnr@192.168.0.21", connect_kwargs={"password": "1234"})
 
-os.system("ssh user@192.168.11.172 reboot")
+conn.run()
