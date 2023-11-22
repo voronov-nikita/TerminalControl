@@ -13,10 +13,10 @@ import subprocess
 import json
 import os
 
-HOST:str = "vnr@192.168.0.21"
-PASSWORD:str = "1234"
-LIST_IP:list|None = ['vnr@192.168.0.24', 'vnr@192.168.0.21']
-COMMAND:str = "ls"
+HOST:str = "root@192.168.11.185"
+PASSWORD:str = "qsc[;."
+LIST_IP:list|None = []
+COMMAND:str = "ls -la"
 
 # A Path of file with data about the MAC addresses of computers
 MAC:str = "mac.json"
@@ -103,7 +103,7 @@ class Terminal():
     
     def sendFileAll(self, filepath:str, list_ip:list, dir:str="/home") -> str:
         '''
-        
+        Send the file to many computers.
         '''
         statuss = tuple()
         for host in list_ip:
@@ -154,6 +154,6 @@ def check_ip(number:int, zone:int) -> dict | None:
 
 if __name__=="__main__":
     term = Terminal(HOST, PASSWORD)
-    term.sendFileAll("mac.json", LIST_IP, "/home/vnr")
+    # term.sendFileAll("mac.json", LIST_IP, "/home/vnr")
     # term.runAll(COMMAND, LIST_IP, isPrint=True)
-    # term.run(COMMAND, isPrint=True)
+    term.run(COMMAND, isPrint=True)
