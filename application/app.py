@@ -7,7 +7,7 @@ import sys
 import os
 
 
-JSONFILE:str = "../hosts.json"
+JSONFILE:str = "hosts.json"
 
 
 class MainLogic(QWidget):
@@ -50,7 +50,7 @@ class Zone3(MainLogic):
             button.setFixedSize(50, 50)
             button.clicked.connect(lambda: self.openTerminal(
                                                             user=self.user,
-                                                            numberZone="Zone3", 
+                                                            numberZone="Zone3",
                                                             numberComp=str(number+1)
                                                             )
                                     )
@@ -102,9 +102,9 @@ class Zone5(MainLogic):
             )
             if number <= 8:
                 button.setText(str(count+number+1))
-                grid.addWidget(button, number - 8, 0)
+                grid.addWidget(button, 0, 8 - number)
             else:
-                grid.addWidget(button, number, 1)
+                grid.addWidget(button, 0, number)
         self.setLayout(grid)
 
 
@@ -155,9 +155,13 @@ class App(QMainWindow):
 
 
 def parsejson(file:str) -> dict:
-    f = open(file, 'r')
-    ls = ''.join(f.readlines())
-    return json.loads(ls)
+    res = ""
+    with open(file, 'r', encoding="utf-8") as f:
+        for line in f:
+            res += line
+    print(res)
+    k = json.loads(res)
+    return k
 
 
 if __name__=="__main__":
