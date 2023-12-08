@@ -103,7 +103,7 @@ class Zone5(MainLogic):
             if number <= 8:
                 button.setText(str(count+number+1))
                 grid.addWidget(button, 0, 8 - number)
-            elif 8< number <= 16:
+            elif 8 < number <= 16:
                 button.setText(str(count+number+1))
                 grid.addWidget(button, 1, number-8)
             else:
