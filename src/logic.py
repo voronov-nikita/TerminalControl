@@ -1,114 +1,132 @@
-# 
-# 
-# 
-# 
+#
+#
+#
+#
 
-
+import wakeonlan
 import paramiko
 import json
 import os
 
+from threading import Thread
 
-# 
+
+#
 class Actions():
-    def __init__(self, user:str, host:str, password:str) -> None:
+    def __init__(self, user: str, host: str, password: str) -> None:
         self.user = user
         self.host = host
         self.password = password
-        
-    
+
     def connect(self) -> None:
         '''
-        
+
         '''
-        
+
         self.ssh = paramiko.SSHClient()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         self.ssh.connect(self.host, username=self.user, password=self.password)
-        
+
     def exportDisplay(self) -> None:
         '''
-        
+
         '''
-        
+
         self.ssh.exec_command("export DISPLAY=:0")
-    
-    def remotePrint(self, command:str) -> str:
+
+    def remotePrint(self, command: str) -> str:
         '''
-        
+
         '''
         stdin, stdout, stderr = self.ssh.exec_command(command)
         return stdout.read().decode('utf-8')
-    
-    def executeCommand(self, command:str, sudoPassword:str=None, output:bool=False) -> str|None:
+
+    def executeCommand(self, command: str, sudoPassword: str = None, output: bool = False) -> str | None:
         '''
-        
+
         '''
-        
+
         if sudoPassword is not None:
-            stdin, stdout, stderr = self.ssh.exec_command(command, get_pty=True)
+            stdin, stdout, stderr = self.ssh.exec_command(
+                command, get_pty=True)
             stdin.write(sudoPassword+"\n")
             stdin.flush()
         else:
             stdin, stdout, stderr = self.ssh.exec_command(command)
-        
+
         if output:
             return stdout.read().decode('utf-8')
-        return 
-    
+        return
 
-# 
+
+#
 class SpecialAction(Actions):
     def __init__(self, user, host, password):
-        
+
         super().__init__(user, host, password)
-        
+
         self.connect()
         self.exportDisplay()
-        
-    def openWebBrowser(self, url:str) -> None:
+
+    def openWebBrowser(self, url: str) -> None:
         '''
-        
+
         '''
-        
-        self.executeCommand(f"setsid chromium-browser {url}")
-        
+
+        self.executeCommand(
+            f"echo 'DISPLAY=:0 chromium-browser {url}' | at now")
+
     def turnOff(self) -> None:
         '''
-        
+
         '''
-        
+
         self.executeCommand("poweroff")
-        
-    def reboot(self, sudoPassword:str) -> None:
+
+    def reboot(self, sudoPassword: str) -> None:
         '''
-        
+
         '''
-        
+
         self.executeCommand(f"sudo reboot", sudoPassword=sudoPassword)
-        
-    def sendFile(self, localFilePath:str, remoteFilePath:str) -> None:
+
+    def sendFile(self, localFilePath: str, remoteFilePath: str) -> None:
         '''
-        
+
         '''
-        
+
         scp = self.ssh.open_sftp()
         scp.put(localFilePath, remoteFilePath)
         scp.close()
-        
-    def WakeOnLan(self, macAdress:str) -> None:
+
+    def WakeOnLan(self, macAddress: str) -> None:
         '''
-        
+
         '''
-        
-        os.system(f"wakeonlan {macAdress}")
+
+        try:
+            wakeonlan.send_magic_packet(macAddress)
+            print(f"Magic packet sent to {macAddress}")
+        except Exception as e:
+            print(f"Error: {e}")
 
 
-
-def parseData(file:str) -> dict:
+def parseData(file: str) -> dict:
     '''
-    
+
     '''
+
     data = open(file, "r")
     return json.load(data)
+
+
+if __name__ == "__main__":
+    for i in range(1, 13):
+        try:
+            ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
+            k = Thread(target=ex.executeCommand,
+                args=("pkill -f chrome",))
+            k.run()
+        except:
+            print(f"Error:", i)

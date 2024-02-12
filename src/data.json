@@ -1,7 +1,8 @@
 {
     "Users":{
         "user":"qsc[;.",
-        "student":"1234"
+        "student":"1234",
+        "root": "qsc[;."
     },
     "Zones":{
         "Zone3":{
