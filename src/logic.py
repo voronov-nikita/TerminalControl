@@ -8,7 +8,7 @@ import paramiko
 import json
 import os
 
-from threading import Thread
+import concurrent.futures
 
 
 #
@@ -90,6 +90,13 @@ class SpecialAction(Actions):
         '''
 
         self.executeCommand(f"sudo reboot", sudoPassword=sudoPassword)
+        
+    def shutdown(self) -> None:
+        '''
+
+        '''
+
+        self.executeCommand(f"poweroff")
 
     def sendFile(self, localFilePath: str, remoteFilePath: str) -> None:
         '''
@@ -122,11 +129,15 @@ def parseData(file: str) -> dict:
 
 
 if __name__ == "__main__":
-    for i in range(1, 13):
-        try:
-            ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
-            k = Thread(target=ex.executeCommand,
-                args=("pkill -f chrome",))
-            k.run()
-        except:
-            print(f"Error:", i)
+    ls = parseData("data.json")["Zones"]["Zone5"]
+    # ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
+    for i in range(1, 30):
+        # wakeonlan.send_magic_packet(ls[str(i)]["mac"])
+            try:
+                ex = SpecialAction("student", f"sm1532-2-ip5-{i}.local", "1234")
+                with concurrent.futures.ProcessPoolExecutor() as executor:
+                    # Запускаем функцию для каждого номера компьютера в диапазоне
+                    # map возвращает результаты в том же порядке, что и элементы в range
+                    results = list(executor.map(ex.shutdown, range(30)))
+            except:
+                print(f"Error:", i)
