@@ -8,7 +8,7 @@ import paramiko
 import json
 import os
 
-import concurrent.futures
+from threading import Thread
 
 
 #
@@ -128,16 +128,20 @@ def parseData(file: str) -> dict:
     return json.load(data)
 
 
+def initConnect(user, host, password):
+    ex = SpecialAction(user, host, password)
+    # ex.openWebBrowser("https://school.mos.ru")
+    # ex.executeCommand("pkill -f chrome")
+    ex.shutdown()
+
+
 if __name__ == "__main__":
     ls = parseData("data.json")["Zones"]["Zone5"]
     # ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
-    for i in range(1, 30):
-        # wakeonlan.send_magic_packet(ls[str(i)]["mac"])
+    for i in range(1, 31):
+            wakeonlan.send_magic_packet(ls[str(i)]["mac"])
             try:
-                ex = SpecialAction("student", f"sm1532-2-ip5-{i}.local", "1234")
-                with concurrent.futures.ProcessPoolExecutor() as executor:
-                    # Запускаем функцию для каждого номера компьютера в диапазоне
-                    # map возвращает результаты в том же порядке, что и элементы в range
-                    results = list(executor.map(ex.shutdown, range(30)))
+                ex = Thread(target=initConnect, args=("student", f"sm1532-2-ip5-{i}.local", "1234"))
+                ex.start()
             except:
                 print(f"Error:", i)
