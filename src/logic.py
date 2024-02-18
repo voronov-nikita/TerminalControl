@@ -3,6 +3,8 @@
 #
 #
 
+from ping3 import ping
+
 import wakeonlan
 import paramiko
 import json
@@ -20,7 +22,9 @@ class Actions():
 
     def connect(self) -> None:
         '''
-
+        Производиться подключение к удаленной машине. 
+        Используюся те параметры, которые были переданы при инициализации экземпляра
+        класса. 
         '''
 
         self.ssh = paramiko.SSHClient()
@@ -30,7 +34,9 @@ class Actions():
 
     def exportDisplay(self) -> None:
         '''
-
+        Экспорт виртуального экрана. Данная команда требуется для того, 
+        чтобы можно было отображать в GUI интерфейсе Linux какие-либо изменения в 
+        KDE облочке устройсва.
         '''
 
         self.ssh.exec_command("export DISPLAY=:0")
@@ -44,7 +50,15 @@ class Actions():
 
     def executeCommand(self, command: str, sudoPassword: str = None, output: bool = False) -> str | None:
         '''
-
+        Ввыполнить команду. Функция позволяет выполнить переданную команду на удаленной машине.
+        команда может быть любого характера, главное чтобы она поддерживалась технологией
+        ssh. 
+        
+        В качестве первого аргумента примнимается сама команда, 
+        затем sudo пароль при необходимости. В качестве 3-его аргумента ожидается булевый тип данных
+        (т.е False(0) или True(1))
+        Данный параметр отвечает за то, чтобы в терминал выводлась или не выводилась кака-ято информация,
+        пришедшая из терминала удаленного компьютера.
         '''
 
         if sudoPassword is not None:
@@ -69,38 +83,47 @@ class SpecialAction(Actions):
         self.connect()
         self.exportDisplay()
 
-    def openWebBrowser(self, url: str) -> None:
+    def openWebBrowser(self, url: str, otherBrowser:str="chromium-browser") -> None:
         '''
-
+        Открыть веб браузер. 
+        Данная команда буквально открывает браузер на удаленной машине.
+        
+        В качестве обязательного аргумента ожидвается url сайта, который нужно открыть.
+        В качестве второго (не обязательного) аргумента ожидается приход названия приложения
+        специфичного браузера.
+        По умолчанию стоит браузер на движке хромиум - chromium-browser
+        
         '''
 
         self.executeCommand(
-            f"echo 'DISPLAY=:0 chromium-browser {url}' | at now")
+            f"echo 'DISPLAY=:0 {otherBrowser} {url}' | at now")
 
     def turnOff(self) -> None:
         '''
-
+        Выключить. 
+        Команда выключает компьютер и заодно очищает кесь накопившийся кэш.
         '''
 
         self.executeCommand("poweroff")
 
     def reboot(self, sudoPassword: str) -> None:
         '''
-
+        Перезагрузка.
+        Команда перезагружает компьютер.
         '''
 
         self.executeCommand(f"sudo reboot", sudoPassword=sudoPassword)
         
-    def shutdown(self) -> None:
-        '''
-
-        '''
-
-        self.executeCommand(f"poweroff")
 
     def sendFile(self, localFilePath: str, remoteFilePath: str) -> None:
         '''
-
+        Отправить файл.
+        Команда отправляет файл с локальной машины на удаленную.
+        
+        В качестве первого аргумента ожидаеться адрес файла, который необходимо отправить.
+        
+        В качестве второго аргумента ожидаеться путь удаленного хранения этого файла.
+        
         '''
 
         scp = self.ssh.open_sftp()
@@ -109,7 +132,14 @@ class SpecialAction(Actions):
 
     def WakeOnLan(self, macAddress: str) -> None:
         '''
-
+        Включить по сети.
+        
+        Если компьютер подключен к локальной сети по беспроводному соединению, то 
+        скорее всего ему доспно включение по сети.
+        
+        Это работает таким образом, чтобы по mac адресу узнать индификаор компьютера 
+        и отправить ему магический пакет, который как раз его и разбудит.
+        
         '''
 
         try:
@@ -117,15 +147,36 @@ class SpecialAction(Actions):
             print(f"Magic packet sent to {macAddress}")
         except Exception as e:
             print(f"Error: {e}")
+            
+    def notify(self, message:str, sender:str, title:str) -> None:
+        '''
+        Уведомление.
+        
+        Функция вызывает системное уведомление
+        '''
+        
+        self.executeCommand(f'''
+                        echo "DISPLAY=:0 notify-send -a {title} {sender} {message}" | at now
+                        ''')
 
 
 def parseData(file: str) -> dict:
     '''
-
+    Функция парсинга данных.
+    
+    Функция нужна чтобы считать все данные с data.json и записать его содержание
+    в переменную типа словаря.
     '''
 
     data = open(file, "r")
     return json.load(data)
+
+def check_device_online(address) -> None:
+    if ping(address):
+        print(f"Устройство с IP-адресом {address} доступно в сети.")
+    else:
+        print(f"Устройство с IP-адресом {address} не доступно в сети.")
+
 
 
 def initConnect(user, host, password):
