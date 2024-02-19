@@ -2,5 +2,5 @@ wakeonlan~=3.1.0
 Kivy~=2.3.0
 kivymd~=1.2.0
 paramiko~=3.3.1
-config~=
-ping3~=
+config~=0.5.1
+ping3~=4.0.4

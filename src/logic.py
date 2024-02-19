@@ -3,7 +3,7 @@
 #
 #
 
-from parse import parseData
+# from parse import parseData
 from ping3 import ping
 
 import wakeonlan
@@ -179,12 +179,13 @@ def initConnect(user, host, password):
 
 # тестирование функций
 if __name__ == "__main__":
-    ls = parseData("../data.json")["Zones"]["Zone5"]
+    # ls = parseData("../data.json")["Zones"]["Zone5"]
     # ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
-    for i in range(1, 31):
-            wakeonlan.send_magic_packet(ls[str(i)]["mac"])
-            try:
-                ex = Thread(target=initConnect, args=("student", f"sm1532-2-ip5-{i}.local", "1234"))
-                ex.start()
-            except:
-                print(f"Error:", i)
+    # for i in range(1, 31):
+    #         wakeonlan.send_magic_packet(ls[str(i)]["mac"])
+    #         try:
+    #             ex = Thread(target=initConnect, args=("student", f"sm1532-2-ip5-{i}.local", "1234"))
+    #             ex.start()
+    #         except:
+    #             print(f"Error:", i)
+    ...
