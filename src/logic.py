@@ -3,12 +3,12 @@
 #
 #
 
+from parse import parseData
 from ping3 import ping
 
 import wakeonlan
 import paramiko
-import json
-import os
+
 
 from threading import Thread
 
@@ -160,16 +160,7 @@ class SpecialAction(Actions):
                         ''')
 
 
-def parseData(file: str) -> dict:
-    '''
-    Функция парсинга данных.
-    
-    Функция нужна чтобы считать все данные с data.json и записать его содержание
-    в переменную типа словаря.
-    '''
 
-    data = open(file, "r")
-    return json.load(data)
 
 def check_device_online(address) -> None:
     if ping(address):
@@ -186,8 +177,9 @@ def initConnect(user, host, password):
     ex.shutdown()
 
 
+# тестирование функций
 if __name__ == "__main__":
-    ls = parseData("data.json")["Zones"]["Zone5"]
+    ls = parseData("../data.json")["Zones"]["Zone5"]
     # ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
     for i in range(1, 31):
             wakeonlan.send_magic_packet(ls[str(i)]["mac"])
