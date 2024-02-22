@@ -1,98 +1,76 @@
-from kivy.lang import Builder
 from kivymd.app import MDApp
-from kivymd.uix.boxlayout import MDBoxLayout, BoxLayout
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.screen import MDScreen
+from kivymd.uix.button import MDRaisedButton
+from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 
-from Block import Block
+class HomeScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.build()
 
-
-Builder.load_string("""
-#:import colors kivymd.color_definitions
-
-<Block>:
-    size_hint: None, None
-    size: "150dp", "150dp"
-    theme_text_color: "Custom"
-    text_color: 1, 1, 1, 1  # Белый цвет текста
-    md_bg_color: 0, 0, 0, 1  # Цвет фона
-
-<MainScreen>:
-    name: 'main'
-    BoxLayout:
-        orientation: 'vertical'
-        Block:
-            text: 'Блок 1'
-            on_release: app.root.current = 'block1_screen'
-        Block:
-            text: 'Блок 2'
-            on_release: app.root.current = 'block2_screen'
-        Block:
-            text: 'Блок 3'
-            on_release: app.root.current = 'block3_screen'
-
-<Block1Screen>:
-    name: 'block1_screen'
-    BoxLayout:
-        orientation: 'vertical'
-        Label:
-            text: 'Это уникальная часть для Блока 1'
-        Button:
-            text: 'Вернуться на главный экран'
-            on_release: app.root.current = 'main'
-
-<Block2Screen>:
-    name: 'block2_screen'
-    BoxLayout:
-        orientation: 'vertical'
-        Label:
-            text: 'Это уникальная часть для Блока 2'
-        Button:
-            text: 'Вернуться на главный экран'
-            on_release: app.root.current = 'main'
-
-<Block3Screen>:
-    name: 'block3_screen'
-    BoxLayout:
-        orientation: 'vertical'
-        Label:
-            text: 'Это уникальная часть для Блока 3'
-        Button:
-            text: 'Вернуться на главный экран'
-            on_release: app.root.current = 'main'
-""")
-
-# Класс для главного экрана
-class MainScreen(Screen):
-    pass
-
-# Классы для уникальных частей каждого блока
-class Block1Screen(Screen):
-    pass
-
-class Block2Screen(Screen):
-    pass
-
-class Block3Screen(Screen):
-    pass
-
-# Основной класс приложения
-class MyApp(MDApp):
     def build(self):
-        # Создаем ScreenManager и добавляем экраны
-        screen_manager = ScreenManager()
+        self.layout = self.create_layout()
+        self.add_widget(self.layout)
 
-        main_screen = MainScreen()
-        block1_screen = Block1Screen()
-        block2_screen = Block2Screen()
-        block3_screen = Block3Screen()
+    def create_layout(self):
+        layout = MDBoxLayout(orientation="vertical", spacing=10)
 
-        screen_manager.add_widget(main_screen)
-        screen_manager.add_widget(block1_screen)
-        screen_manager.add_widget(block2_screen)
-        screen_manager.add_widget(block3_screen)
+        for i in range(20):
+            btn = MDRaisedButton(
+                text=f'Button {i}',
+                on_release=self.on_button_click,
+                size_hint=(1, None),
+                height=60,
+                md_bg_color=(0.2, 0.2, 0.2, 1),
+            )
+            layout.add_widget(btn)
 
-        return screen_manager
+        return layout
 
+    def on_button_click(self, instance):
+        app = MDApp.get_running_app()
+        app.screen_manager.transition = SlideTransition(direction="left")
+        app.screen_manager.switch_to(OtherScreen())
+
+class OtherScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.build()
+
+    def build(self):
+        self.layout = self.create_layout()
+        self.add_widget(self.layout)
+
+    def create_layout(self):
+        layout = MDBoxLayout(orientation="vertical", spacing=10)
+
+        for i in range(20):
+            btn = MDRaisedButton(
+                text=f'Other Button {i}',
+                on_release=self.on_button_click,
+                size_hint=(1, None),
+                height=60,
+                md_bg_color=(0.2, 0.2, 0.2, 1),
+            )
+            layout.add_widget(btn)
+
+        return layout
+
+    def on_button_click(self, instance):
+        app = MDApp.get_running_app()
+        app.screen_manager.transition = SlideTransition(direction="right")
+        app.screen_manager.switch_to(HomeScreen())
+
+class ScrollableListApp(MDApp):
+    def build(self):
+        self.screen_manager = ScreenManager()
+
+        # Добавляем начальный экран (HomeScreen)
+        home_screen = HomeScreen(name="home_screen")
+        self.screen_manager.add_widget(home_screen)
+
+        return self.screen_manager
 
 if __name__ == '__main__':
-    MyApp().run()
+    ScrollableListApp().run()
