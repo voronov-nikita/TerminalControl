@@ -1,7 +1,36 @@
+# main.kv
 
-BoxLayout:
-    orientation: 'vertical'
 
-    MDRaisedButton:
-        text: 'White Button'
-        md_bg_color: 1, 1, 1, 1  # Задний фон белого цвета
+<MainScreen>:
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: '20dp'
+        size_hint: 1, 1
+        
+
+        ScrollView:
+            GridLayout:
+
+                id: grid
+                cols: 1
+                spacing: '15dp'
+                pos_hint: {'center_x': 0.5}
+                size_hint_y: None
+                height: self.minimum_height
+                size_hint_x: 1
+
+                
+                
+
+<MoreScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: '10dp'
+
+        Label:
+            text: 'Данные с предыдущего экрана:'
+
+        MDRaisedButton:
+            text: 'Вернуться'
+            on_press: root.on_back_button_press()
