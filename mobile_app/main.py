@@ -1,76 +1,38 @@
+# 
+# 
+# 
+# 
+
+from kivy.lang import Builder
 from kivymd.app import MDApp
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.screen import MDScreen
+from kivy.uix.screenmanager import ScreenManager, Screen, WipeTransition
 from kivymd.uix.button import MDRaisedButton
-from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
+from kivy.uix.boxlayout import BoxLayout
 
-class HomeScreen(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.build()
+from mainScreen import MainScreen
+from moreScreen import MoreScreen
+# from Block import MainBlock
 
+Builder.load_file("main.kv")
+
+
+
+class TerminalControl(MDApp):
     def build(self):
-        self.layout = self.create_layout()
-        self.add_widget(self.layout)
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = "Green"
+        
+        sm = ScreenManager(transition=WipeTransition())
 
-    def create_layout(self):
-        layout = MDBoxLayout(orientation="vertical", spacing=10)
+        # Добавление экранов в ScreenManager
+        menu_screen = MainScreen(name='main_screen')
+        new_screen = MoreScreen(name='more_screen')
 
-        for i in range(20):
-            btn = MDRaisedButton(
-                text=f'Button {i}',
-                on_release=self.on_button_click,
-                size_hint=(1, None),
-                height=60,
-                md_bg_color=(0.2, 0.2, 0.2, 1),
-            )
-            layout.add_widget(btn)
+        sm.add_widget(menu_screen)
+        sm.add_widget(new_screen)
 
-        return layout
-
-    def on_button_click(self, instance):
-        app = MDApp.get_running_app()
-        app.screen_manager.transition = SlideTransition(direction="left")
-        app.screen_manager.switch_to(OtherScreen())
-
-class OtherScreen(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.build()
-
-    def build(self):
-        self.layout = self.create_layout()
-        self.add_widget(self.layout)
-
-    def create_layout(self):
-        layout = MDBoxLayout(orientation="vertical", spacing=10)
-
-        for i in range(20):
-            btn = MDRaisedButton(
-                text=f'Other Button {i}',
-                on_release=self.on_button_click,
-                size_hint=(1, None),
-                height=60,
-                md_bg_color=(0.2, 0.2, 0.2, 1),
-            )
-            layout.add_widget(btn)
-
-        return layout
-
-    def on_button_click(self, instance):
-        app = MDApp.get_running_app()
-        app.screen_manager.transition = SlideTransition(direction="right")
-        app.screen_manager.switch_to(HomeScreen())
-
-class ScrollableListApp(MDApp):
-    def build(self):
-        self.screen_manager = ScreenManager()
-
-        # Добавляем начальный экран (HomeScreen)
-        home_screen = HomeScreen(name="home_screen")
-        self.screen_manager.add_widget(home_screen)
-
-        return self.screen_manager
-
-if __name__ == '__main__':
-    ScrollableListApp().run()
+        return sm
+    
+    
+if __name__=="__main__":
+    TerminalControl().run()

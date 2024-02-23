@@ -1,22 +1,14 @@
-#
-#
-#
-
-# специальный импорт из директории srcкорневого каталога 
-import sys
-sys.path.append("../")
-from src.logic import SpecialAction
-
-
 from kivymd.uix.button import MDRaisedButton
-
-
-class Block(MDRaisedButton):
-    def __init__(self, text:str, **kwargs) -> None:
-        super(Block, self).__init__(**kwargs)
+from kivymd.app import MDApp
+    
+class CustomButton(MDRaisedButton):
         
-        self.on_release = self.on_block_press
-        self.text = text
-
-    def on_block_press(self):
-        print(f'Вы нажали на блок: {self.text}')
+    def on_press(self):
+        app = MDApp.get_running_app()
+        data_to_pass = "Привет, я данные с предыдущего экрана!"
+        app.root.current = 'more_screen'
+        app.root.get_screen('more_screen').update_data(data_to_pass)
+        # Вызываем оригинальный метод on_press родительского класса MDRaisedButton
+        super(CustomButton, self).on_press()
+        
+    
