@@ -3,8 +3,8 @@
 #
 #
 
-# from parse import parseData
-from ping3 import ping
+from parse import checkDevice
+
 
 import wakeonlan
 import paramiko
@@ -53,7 +53,7 @@ class Actions():
         Ввыполнить команду. Функция позволяет выполнить переданную команду на удаленной машине.
         команда может быть любого характера, главное чтобы она поддерживалась технологией
         ssh. 
-        
+
         В качестве первого аргумента примнимается сама команда, 
         затем sudo пароль при необходимости. В качестве 3-его аргумента ожидается булевый тип данных
         (т.е False(0) или True(1))
@@ -83,16 +83,16 @@ class SpecialAction(Actions):
         self.connect()
         self.exportDisplay()
 
-    def openWebBrowser(self, url: str, otherBrowser:str="chromium-browser") -> None:
+    def openWebBrowser(self, url: str, otherBrowser: str = "chromium-browser") -> None:
         '''
         Открыть веб браузер. 
         Данная команда буквально открывает браузер на удаленной машине.
-        
+
         В качестве обязательного аргумента ожидвается url сайта, который нужно открыть.
         В качестве второго (не обязательного) аргумента ожидается приход названия приложения
         специфичного браузера.
         По умолчанию стоит браузер на движке хромиум - chromium-browser
-        
+
         '''
 
         self.executeCommand(
@@ -113,17 +113,16 @@ class SpecialAction(Actions):
         '''
 
         self.executeCommand(f"sudo reboot", sudoPassword=sudoPassword)
-        
 
     def sendFile(self, localFilePath: str, remoteFilePath: str) -> None:
         '''
         Отправить файл.
         Команда отправляет файл с локальной машины на удаленную.
-        
+
         В качестве первого аргумента ожидаеться адрес файла, который необходимо отправить.
-        
+
         В качестве второго аргумента ожидаеться путь удаленного хранения этого файла.
-        
+
         '''
 
         scp = self.ssh.open_sftp()
@@ -133,13 +132,13 @@ class SpecialAction(Actions):
     def WakeOnLan(self, macAddress: str) -> None:
         '''
         Включить по сети.
-        
+
         Если компьютер подключен к локальной сети по беспроводному соединению, то 
         скорее всего ему доспно включение по сети.
-        
+
         Это работает таким образом, чтобы по mac адресу узнать индификаор компьютера 
         и отправить ему магический пакет, который как раз его и разбудит.
-        
+
         '''
 
         try:
@@ -147,27 +146,17 @@ class SpecialAction(Actions):
             print(f"Magic packet sent to {macAddress}")
         except Exception as e:
             print(f"Error: {e}")
-            
-    def notify(self, message:str, sender:str, title:str) -> None:
+
+    def notify(self, message: str, sender: str, title: str) -> None:
         '''
         Уведомление.
-        
+
         Функция вызывает системное уведомление
         '''
-        
+
         self.executeCommand(f'''
-                        echo "DISPLAY=:0 notify-send -a {title} {sender} {message}" | at now
-                        ''')
-
-
-
-
-def check_device_online(address) -> None:
-    if ping(address):
-        print(f"Устройство с IP-адресом {address} доступно в сети.")
-    else:
-        print(f"Устройство с IP-адресом {address} не доступно в сети.")
-
+                echo "DISPLAY=:0 notify-send -a {title} {sender} {message}" | at now
+                ''')
 
 
 def initConnect(user, host, password):

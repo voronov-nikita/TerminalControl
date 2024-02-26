@@ -3,6 +3,8 @@
 # 
 # 
 
+from ping3 import ping
+import asyncio
 import json
 
 
@@ -18,5 +20,16 @@ def parseData(file: str) -> dict:
     return json.load(data)
 
 
+def checkDevice(address) -> bool:
+    '''
+    
+    '''
+    
+    if ping(address):
+        return True
+    return False
+
+
 if __name__=="__main__":
-    print(parseData("../data.json"))
+    # print(parseData("../data.json"))
+    print(checkDevice("server-1"))
