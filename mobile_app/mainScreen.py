@@ -44,7 +44,7 @@ class MainScreen(Screen):
         results = []
 
         def worker(address):
-            print(checkDevice(f"{address}.local"))
+            checkDevice(address)
             results.append(checkDevice(address))
 
         #Подготовка потоков для каждого адреса

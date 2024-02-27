@@ -1,35 +1,28 @@
-import threading
-from ping3 import ping
+from kivymd.app import MDApp
+from kivymd.uix.screen import MDScreen
+from kivymd.uix.button import MDIconButton
+from kivy.uix.boxlayout import BoxLayout
 
-def checkDevice(address) -> bool:
-    '''
-    Ваша реализация функции ping
-    '''
-    if ping(address):
-        return True
-    return False
+class MyApp(MDApp):
+    def build(self):
+        self.screen = MDScreen()
 
-def check_devices_parallel(addresses):
-    results = []
+        # Создаем BoxLayout для центрирования
+        layout = BoxLayout(orientation='vertical', spacing=10)
+        
+        # Создаем кнопку с встроенной иконкой и устанавливаем размер иконки
+        icon_button = MDIconButton(icon="android", pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        icon_button.bind(on_release=self.icon_button_pressed)
+        
+        # Добавляем кнопку в BoxLayout
+        layout.add_widget(icon_button)
 
-    def worker(address):
-        result = checkDevice(address)
-        results.append(result)
+        # Добавляем BoxLayout на экран
+        self.screen.add_widget(layout)
 
-    # Создаем и запускаем потоки для каждого адреса
-    threads = [threading.Thread(target=worker, args=(address,)) for address in addresses]
-    for thread in threads:
-        thread.start()
+        return self.screen
 
-    # Дожидаемся завершения всех потоков
-    for thread in threads:
-        thread.join()
+    def icon_button_pressed(self, instance):
+        print("IconButton pressed.")
 
-    return results
-
-# Пример использования
-addresses_to_check = ['192.168.0.1', '192.168.0.10', '192.168.1.3']
-results = check_devices_parallel(addresses_to_check)
-
-# Результаты будут содержать True или False в зависимости от того, доступен ли каждый хост
-print(results)
+MyApp().run()
