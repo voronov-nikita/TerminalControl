@@ -2,23 +2,46 @@
 
 
 <MainScreen>:
-
     BoxLayout:
-        orientation: 'vertical'
-        spacing: '20dp'
+        orientation: "vertical"
         size_hint: 1, 1
-        
+        pos_hint: {"center_x":0.85}
 
-        ScrollView:
-            GridLayout:
+        BoxLayout:
 
-                id: grid
-                cols: 1
-                spacing: '15dp'
-                pos_hint: {'center_x': 0.5}
-                size_hint_y: None
-                height: self.minimum_height
-                size_hint_x: 1
+            size_hint: 1, 0.2
+            pos_hint: {'center_y': 0.9}
+
+            MDIconButton:
+                icon: 'reload'
+                icon_size: "60dp"
+
+            MDIconButton:
+                icon: 'reload'
+                icon_size: "60dp"
+
+            MDIconButton:
+                icon: 'reload'
+                icon_size: "60dp"
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: '20dp'
+            size_hint: 1, 0.8
+            pos_hint: {'center_x':0.5}
+            
+
+            ScrollView:
+
+                GridLayout:
+
+                    id: grid
+                    cols: 1
+                    spacing: '15dp'
+                    pos_hint: {'center_x': 0.5}
+                    size_hint_y: None
+                    height: self.minimum_height
+                    size_hint_x: 1
 
                 
                 
