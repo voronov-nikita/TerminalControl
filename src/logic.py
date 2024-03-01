@@ -3,7 +3,7 @@
 #
 #
 
-from parse import parseData
+from parse import parseData, 
 
 import wakeonlan
 import paramiko
@@ -97,7 +97,7 @@ class SpecialAction(Actions):
         self.executeCommand(
             f"echo 'DISPLAY=:0 {otherBrowser} {url}' | at now")
 
-    def turnOff(self) -> None:
+    def shutdown(self) -> None:
         '''
         Выключить. 
         Команда выключает компьютер и заодно очищает кесь накопившийся кэш.
@@ -159,7 +159,7 @@ class SpecialAction(Actions):
 
 
 def initConnect(user, host, password):
-    # ex = SpecialAction(user, host, password)
+    ex = SpecialAction(user, host, password)
     # ex.openWebBrowser("https://school.mos.ru")
     # ex.executeCommand("pkill -f chrome")
     ex.shutdown()
@@ -167,14 +167,12 @@ def initConnect(user, host, password):
 
 # тестирование функций
 if __name__ == "__main__":
-    ls = parseData("../data.json")["Zones"]["Zone5"]
-    for i in range(3, 30):
-        # wakeonlan.send_magic_packet(ls[str(i)]["mac"])
-        try:
-            ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
-            ex.turnOff()
-            # ex = Thread(target=initConnect, args=(
-            #     "student", f"sm1532-2-ip5-{i}.local", "1234"))
-            # ex.start()
-        except:
-            print(f"Error:", i)
+    ls = parseData("../data.json")["zones"]["zone5"]
+    print(ls)
+    # for i in range(1, 30):
+    #     try:
+    #         ex = Thread(target=initConnect, args=(
+    #             "student", f"sm1532-2-ip5-{i}.local", "1234"))
+    #         ex.start()
+    #     except:
+    #         print(f"Error:", i)
