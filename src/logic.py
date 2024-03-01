@@ -3,6 +3,7 @@
 #
 #
 
+from parse import parseData 
 
 import wakeonlan
 import paramiko
@@ -153,8 +154,6 @@ class SpecialAction(Actions):
         '''
 
         self.executeCommand(f'''
-                        echo "DISPLAY=:0 notify-send -a '{title}' '{sender}' '{message}'" | at now
-                        ''')
                 echo "DISPLAY=:0 notify-send -a '{title}' '{sender}' '{message}'" | at now
                 ''')
 
