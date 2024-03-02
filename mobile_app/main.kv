@@ -1,6 +1,23 @@
 # main.kv
 
 
+<HomeScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, 1
+        pos_hint: {"center_x":0.5, "center_y":0.5}
+
+        ScrollView:
+            GridLayout:
+                id: grid2
+                cols: 1
+                spacing: '15dp'
+                pos_hint: {'center_x': 0.5}
+                size_hint_y: None
+                height: self.minimum_height
+                size_hint_x: 1
+
+
 <MainScreen>:
     BoxLayout:
         orientation: "vertical"

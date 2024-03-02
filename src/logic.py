@@ -5,7 +5,6 @@
 
 from parse import parseData, checkDevice
 
-import wakeonlan
 import paramiko
 
 
@@ -128,29 +127,21 @@ class SpecialAction(Actions):
         scp.put(localFilePath, remoteFilePath)
         scp.close()
 
-    def WakeOnLan(self, macAddress: str) -> None:
-        '''
-        Включить по сети.
-
-        Если компьютер подключен к локальной сети по беспроводному соединению, то 
-        скорее всего ему доспно включение по сети.
-
-        Это работает таким образом, чтобы по mac адресу узнать индификаор компьютера 
-        и отправить ему магический пакет, который как раз его и разбудит.
-
-        '''
-
-        try:
-            wakeonlan.send_magic_packet(macAddress)
-            print(f"Magic packet sent to {macAddress}")
-        except Exception as e:
-            print(f"Error: {e}")
-
     def notify(self, message: str, sender: str, title: str) -> None:
         '''
         Уведомление.
 
-        Функция вызывает системное уведомление
+        Функция вызывает системное уведомление. 
+        Для уведомленения необходимо передать несколько параметров:
+
+        - message - само сообщение, которое будет передаваться в качестве
+        основного блока;
+
+        - sender - имя отправителя. Это отображаемое имя приложения или 
+        какого-либо пользователя в синформации о сообщении;
+
+        - title - заголовок сообщения. 
+        Отображаемая информация о заголовке информации. Это самое большое, что отображается в уведомлении.
         '''
 
         self.executeCommand(f'''
@@ -159,7 +150,7 @@ class SpecialAction(Actions):
 
 
 def initConnect(user, host, password):
-    # ex = SpecialAction(user, host, password)
+    ex = SpecialAction(user, host, password)
     # ex.openWebBrowser("https://school.mos.ru")
     # ex.executeCommand("pkill -f chrome")
     ex.shutdown()
@@ -171,10 +162,10 @@ if __name__ == "__main__":
     for i in range(3, 30):
         # wakeonlan.send_magic_packet(ls[str(i)]["mac"])
         try:
-            ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
-            ex.turnOff()
-            # ex = Thread(target=initConnect, args=(
-            #     "student", f"sm1532-2-ip5-{i}.local", "1234"))
-            # ex.start()
+            # ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
+            # ex.turnOff()
+            ex = Thread(target=initConnect, args=(
+                "student", f"sm1532-2-ip5-{i}.local", "1234"))
+            ex.start()
         except:
             print(f"Error:", i)

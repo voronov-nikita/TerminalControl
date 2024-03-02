@@ -11,7 +11,6 @@ import threading
 from Block import CustomButton
 from src.parse import parseData, checkDevice
 
-from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from kivy.metrics import dp
 
@@ -63,7 +62,7 @@ class MainScreen(Screen):
         '''
 
         # инициализация хостов
-        listHosts = parseData("../data.json")['Zones']["Zone3"]
+        listHosts = parseData("../data.json")['zones']["zone3"]
         
         if not self.active:
             self.active = self.initHosts([elem['host'] for elem in listHosts.values()])

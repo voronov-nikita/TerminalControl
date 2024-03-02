@@ -11,7 +11,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 from mainScreen import MainScreen
 from moreScreen import MoreScreen
-# from Block import MainBlock
+from homeScreen import HomeScreen
 
 Builder.load_file("main.kv")
 
@@ -25,9 +25,11 @@ class TerminalControl(MDApp):
         sm = ScreenManager(transition=WipeTransition())
 
         # Добавление экранов в ScreenManager
+        home_screen = HomeScreen(name="home_screen")
         menu_screen = MainScreen(name='main_screen')
         new_screen = MoreScreen(name='more_screen')
 
+        sm.add_widget(home_screen)
         sm.add_widget(menu_screen)
         sm.add_widget(new_screen)
 
