@@ -3,7 +3,7 @@
 #
 #
 
-from parse import parseData 
+from parse import parseData, checkDevice
 
 import wakeonlan
 import paramiko
