@@ -1,5 +1,7 @@
 #
-#
+# Файл, описывающий логику действий базовых команд.
+# Здесь же хранится класс, описыващий все действия для конкретной машины.
+# К примеру выключить компьютер или перезагруз его через удаленный доступ.
 #
 #
 
@@ -11,7 +13,8 @@ import paramiko
 from threading import Thread
 
 
-#
+# Класс базовых действий
+# Описывает состояниеподключения и работу конкретно с оборудованием оболочки Linux системы
 class Actions():
     def __init__(self, user: str, host: str, password: str) -> None:
         self.user = user
@@ -41,7 +44,16 @@ class Actions():
 
     def remotePrint(self, command: str) -> str:
         '''
+        Метод, способный отобразить в собвтенном терминале подключающегося информацию
+        из терминала удаленной машины. 
 
+        - command - команда, которая должны выполниться на удаленной машине.
+
+        В консоле админимтратора отобразиться информация, которая должна отобразиться 
+        на удаленном компьютере. 
+
+        К примеру при вызове метода ```remotePrint(command="ls")``` в терминале отобразится
+        то, что хранится на удаленной машине в формате списка со всеми скрытыми эллементами при вызове совместно с атрибутом ```r''```
         '''
         stdin, stdout, stderr = self.ssh.exec_command(command)
         return stdout.read().decode('utf-8')
@@ -72,12 +84,14 @@ class Actions():
         return
 
 
-#
+# Класс специальных действий
+# Открытие бразуера на удаленной машине, выключение питания, отправка файла и многое другое.
 class SpecialAction(Actions):
     def __init__(self, user, host, password):
 
         super().__init__(user, host, password)
 
+        # произвести подключение и экспорт удаленного дисплея для работы с id процессами
         self.connect()
         self.exportDisplay()
 
@@ -149,7 +163,7 @@ class SpecialAction(Actions):
                 ''')
 
 
-def initConnect(user, host, password):
+def start(user, host, password):
     ex = SpecialAction(user, host, password)
     # ex.openWebBrowser("https://school.mos.ru")
     # ex.executeCommand("pkill -f chrome")
@@ -159,12 +173,9 @@ def initConnect(user, host, password):
 # тестирование функций
 if __name__ == "__main__":
     ls = parseData("../data.json")["Zones"]["Zone5"]
-    for i in range(3, 30):
-        # wakeonlan.send_magic_packet(ls[str(i)]["mac"])
+    for i in range(1, 31):
         try:
-            # ex = SpecialAction("student", f"sm1532-2-ip3-{i}.local", "1234")
-            # ex.turnOff()
-            ex = Thread(target=initConnect, args=(
+            ex = Thread(target=start, args=(
                 "student", f"sm1532-2-ip5-{i}.local", "1234"))
             ex.start()
         except:
