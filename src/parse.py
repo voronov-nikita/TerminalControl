@@ -51,7 +51,7 @@ def WakeOnLan(macAddress: str) -> None:
 
     try:
         # отправляем запрос дважды для подтверждения получения пакета
-        wakeonlan.send_magic_packet(macAddress)
+        # wakeonlan.send_magic_packet(macAddress)
         wakeonlan.send_magic_packet(macAddress)
         print(f"Magic packet sent to {macAddress}")
     except Exception as e:

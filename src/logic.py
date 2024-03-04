@@ -5,7 +5,7 @@
 #
 #
 
-from parse import parseData, checkDevice
+from parse import parseData, checkDevice, WakeOnLan
 
 import paramiko
 
@@ -110,7 +110,7 @@ class SpecialAction(Actions):
         self.executeCommand(
             f"echo 'DISPLAY=:0 {otherBrowser} {url}' | at now")
 
-    def turnOff(self) -> None:
+    def shutdown(self) -> None:
         '''
         Выключить. 
         Команда выключает компьютер и заодно очищает кесь накопившийся кэш.
@@ -172,11 +172,13 @@ def start(user, host, password):
 
 # тестирование функций
 if __name__ == "__main__":
-    ls = parseData("../data.json")["Zones"]["Zone5"]
-    for i in range(1, 31):
-        try:
-            ex = Thread(target=start, args=(
-                "student", f"sm1532-2-ip5-{i}.local", "1234"))
-            ex.start()
-        except:
-            print(f"Error:", i)
+    ls = parseData("../data.json")["zones"]["zone5"]
+    print(ls)
+    for i in range(1, 13):
+        WakeOnLan(ls[str(i)]['mac'])
+        # try:
+        #     ex = Thread(target=start, args=(
+        #         "student", f"sm1532-2-ip5-{i}.local", "1234"))
+        #     ex.start()
+        # except:
+        #     print(f"Error:", i)
