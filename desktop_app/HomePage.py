@@ -4,13 +4,13 @@
 # Зависимости для описания логики подключения, хранения и транспортировки не требуются
 #
 
-from PyQt5.QtWidgets import QWidget, QApplication, QDesktopWidget
+from PyQt5.QtWidgets import QWidget, QApplication, QDesktopWidget, QVBoxLayout, QLabel
 from PyQt5.QtGui import QIcon
 import sys
 
 # Класс, в котором описаны зависимости для базовых кнопок при автовходе
 class Home(QWidget):
-    def __init__(self):
+    def __init__(self, button):
         super().__init__()
         
         self.windowSize:tuple = (900, 700)
@@ -18,7 +18,7 @@ class Home(QWidget):
         self.icon:str = "../assets/mainIcon.jpg"
         
         self.initHead()
-        self.initUI()
+        self.initUI(button)
         
         
     def _center(self):
@@ -52,7 +52,7 @@ class Home(QWidget):
         self.setGeometry(0, 0, *self.windowSize)
         self._center()
 
-    def initUI(self) -> None:
+    def initUI(self, button) -> None:
         '''
         Функция, которая используется при инициализации класса ```Home```
         
@@ -66,7 +66,12 @@ class Home(QWidget):
         И другое.
         '''
 
-        pass
+        self.page1_layout = QVBoxLayout(self)
+        lbl = QLabel(self)
+        lbl.setText("HOME")
+        self.page1_layout.addWidget(lbl)
+        self.page1_layout.addWidget(button)
+
 
 
 # Для тестрования отдельного блока используется данная конструкция
