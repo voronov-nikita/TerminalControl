@@ -1,72 +1,59 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QDialog, QVBoxLayout, QLineEdit, QLabel, QHBoxLayout, QFileDialog, QDesktopWidget
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QScrollArea
 
-class AddDataDialog(QDialog):
-    def __init__(self, parent=None):
-        super(AddDataDialog, self).__init__(parent)
-        self.setWindowTitle('Добавление данных в JSON')
-        self.setGeometry(100, 100, 400, 200)
-
-        self.initUI()
-
-    def initUI(self):
-        layout = QVBoxLayout()
-
-        label = QLabel('Введите данные:')
-        self.data_input = QLineEdit()
-
-        buttons_layout = QHBoxLayout()
-        ok_button = QPushButton('OK', self)
-        ok_button.clicked.connect(self.accept)
-        cancel_button = QPushButton('Отмена', self)
-        cancel_button.clicked.connect(self.reject)
-
-        buttons_layout.addWidget(ok_button)
-        buttons_layout.addWidget(cancel_button)
-
-        layout.addWidget(label)
-        layout.addWidget(self.data_input)
-        layout.addLayout(buttons_layout)
-
-        self.setLayout(layout)
-
-class MyWindow(QMainWindow):
+class MainWindow(QWidget):
     def __init__(self):
-        super(MyWindow, self).__init__()
+        super().__init__()
 
-        self.initUI()
+        self.pages = [
+            {"title": "Page 1", "content": "Content of Page 1"},
+            {"title": "Page 2", "content": "Content of Page 2"},
+            {"title": "Page 3", "content": "Content of Page 3"}
+        ]
 
-    def initUI(self):
-        self.setGeometry(0, 0, 600, 400)
-        self.center()
+        self.current_page_index = 0
 
-        self.setWindowTitle('Центральное окно')
+        self.setup_ui()
 
-        # Создаем кнопку с иконкой "+"
-        add_button = QPushButton(QIcon('plus_icon.png'), '', self)
-        add_button.setGeometry(self.width() - 50, self.height() - 50, 40, 40)
-        add_button.clicked.connect(self.showAddDataDialog)
+    def setup_ui(self):
+        self.setWindowTitle("List Navigation")
 
-        self.show()
+        layout = QVBoxLayout(self)
 
-    def center(self):
-        screen = QDesktopWidget().screenGeometry()
-        size = self.geometry()
-        x = (screen.width() - size.width()) // 2
-        y = (screen.height() - size.height()) // 2
-        self.move(x, y)
+        self.scroll_area = QScrollArea()
+        layout.addWidget(self.scroll_area)
 
-    def showAddDataDialog(self):
-        dialog = AddDataDialog(self)
-        result = dialog.exec_()
+        content_widget = QWidget()
+        self.scroll_area.setWidget(content_widget)
+        self.scroll_area.setWidgetResizable(True)
 
-        if result == QDialog.Accepted:
-            data = dialog.data_input.text()
-            with open("test.json", 'w') as file:
-                file.write(f"'test1':'{data}'")
+        content_layout = QVBoxLayout(content_widget)
 
-if __name__ == '__main__':
+        for page in self.pages:
+            button = QPushButton(page["title"])
+            button.clicked.connect(lambda checked, title=page["title"]: self.change_page(title))
+            button.setFlat(True)  # Убираем обводку у кнопки
+            content_layout.addWidget(button)
+
+        self.page_label = QLabel()
+        content_layout.addWidget(self.page_label)
+
+        self.update_page()
+
+    def change_page(self, title):
+        for index, page in enumerate(self.pages):
+            if page["title"] == title:
+                self.current_page_index = index
+                self.update_page()
+                break
+
+    def update_page(self):
+        page = self.pages[self.current_page_index]
+        self.page_label.setText(page["content"])
+
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MyWindow()
+    window = MainWindow()
+    window.resize(400, 300)
+    window.show()
     sys.exit(app.exec_())
