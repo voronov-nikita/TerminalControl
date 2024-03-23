@@ -5,7 +5,10 @@
 #
 #
 
-from parse import parseData, checkDevice, WakeOnLan
+import sys
+sys.path.append("../")
+
+from src.parse import parseData, WakeOnLan
 
 import paramiko
 

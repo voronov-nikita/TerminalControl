@@ -5,7 +5,9 @@
 #
 
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QStackedWidget
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
+
 import sys
 
 from HomePage import Home
@@ -16,10 +18,12 @@ class MyApp(QWidget):
         super().__init__()
 
         self.stacked_widget = QStackedWidget(self)
+        self.stacked_widget.setGeometry(0, 0, 600, 600)
 
         # Создаем виджеты для различных страниц
         btn = QPushButton("На страницу 2", self, clicked=self.switch_to_page2)
         self.page1 = Home(btn)
+        
         
         self.page2 = QWidget()
         self.page2_layout = QVBoxLayout(self.page2)
@@ -33,6 +37,7 @@ class MyApp(QWidget):
         main_layout = QVBoxLayout(self)
         main_layout.addWidget(self.stacked_widget)
 
+        
     def switch_to_page1(self):
         self.stacked_widget.setCurrentIndex(0)
 

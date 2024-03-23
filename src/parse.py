@@ -4,7 +4,7 @@
 #
 
 from ping3 import ping
-import wakeonlan
+from wakeonlan import send_magic_packet
 import asyncio
 import json
 
@@ -51,11 +51,16 @@ def WakeOnLan(macAddress: str) -> None:
 
     try:
         # отправляем запрос дважды для подтверждения получения пакета
-        wakeonlan.send_magic_packet(macAddress)
+        send_magic_packet(macAddress)
         print(f"Magic packet sent to {macAddress}")
     except Exception as e:
         print(f"Error: {e}")
 
 
 if __name__ == "__main__":
-    print(parseData("../data.json")["zones"])
+    ls = parseData("../data.json")["zones"]['zone3']
+    
+    for i in ls.keys():
+        print(ls[i]['mac'])
+        mac = ls[i]['mac']
+        WakeOnLan(mac)

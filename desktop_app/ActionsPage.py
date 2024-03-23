@@ -1,25 +1,14 @@
-#
-# Файл, описывающий зависимости в окне №1 приложения
-# В окне "Дом" назодятся основные кнопки, подктверждения, хранения и фильтрации данных
-# Зависимости для описания логики подключения, хранения и транспортировки не требуются
-#
-
 from PyQt5.QtWidgets import QWidget, QApplication, QDesktopWidget, QVBoxLayout, QPushButton
 from PyQt5.QtGui import QIcon
 import sys
 
-sys.path.append("../")
-
-from src.parse import parseData
-from Components import ButtonConnectZones
+from Components import ButtonActions
 
 
-# Класс, в котором описаны зависимости для базовых кнопок при автовходе
-class Home(QWidget):
+class Actions(QWidget):
     def __init__(self):
         super().__init__()
         
-        self.listButtons = parseData("../data.json")['zones']
         
         self.windowSize:tuple = (800, 600)
         self.title:str = "Terminal Control"
@@ -79,23 +68,8 @@ class Home(QWidget):
         И другое.
         '''
 
-        self.page1_layout = QVBoxLayout(self)
+        layout = QVBoxLayout(self)
         
-        for i in self.listButtons:
-            button = ButtonConnectZones(str(i))
-            button.clicked.connect(lambda _, arg=i: button.do(arg))
-            self.page1_layout.addWidget(button)
+        button_wakeonlan = ButtonActions(title="Выколючить компьютер")
         
-        # Конпка для одновременного подлючения ко всем 
-        button = ButtonConnectZones("ALL DEVICE")
-        button.clicked.connect(lambda _, arg="ALL": button.do(arg))
-        self.page1_layout.addWidget(button)
-        
-
-
-# Для тестрования отдельного блока используется данная конструкция
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    ex = Home()
-    ex.show()
-    sys.exit(app.exec_())
+        self.setLayout(layout)
