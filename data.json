@@ -1,8 +1,4 @@
 {
-	"users": {
-		"user": "qsc[;.",
-		"student": "1234"
-	},
 	"laptops": {
 		"10": {
 			"host": "sm1532-2-ipn-10"
@@ -27,6 +23,56 @@
 		}
 	},
 	"zones": {
+		"zone1": {
+			"1":{
+				"host": "sm1532-2-ip1-1",
+				"mac": null
+			},
+			"2":{
+				"host": "sm1532-2-ip1-2",
+				"mac": null
+			},
+			"3":{
+				"host": "sm1532-2-ip1-3",
+				"mac": null
+			},
+			"4":{
+				"host": "sm1532-2-ip1-4",
+				"mac": null
+			},
+			"5":{
+				"host": "sm1532-2-ip1-5",
+				"mac": null
+			},
+			"6":{
+				"host": "sm1532-2-ip1-6",
+				"mac": null
+			},
+			"7":{
+				"host": "sm1532-2-ip1-7",
+				"mac": null
+			},
+			"8":{
+				"host": "sm1532-2-ip1-8",
+				"mac": null
+			},
+			"9":{
+				"host": "sm1532-2-ip1-9",
+				"mac": null
+			},
+			"10":{
+				"host": "sm1532-2-ip1-10",
+				"mac": null
+			},
+			"11":{
+				"host": "sm1532-2-ip1-11",
+				"mac": null
+			},
+			"12":{
+				"host": "sm1532-2-ip1-12",
+				"mac": null
+			}
+		},
 		"zone3": {
 			"1": {
 				"host": "sm1532-2-ip3-1",

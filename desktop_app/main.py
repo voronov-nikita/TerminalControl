@@ -1,53 +1,91 @@
-#
-# Основной файл загрузки приложения
-# Здесь происходит инициализация основных параметров и компонентов, включая отдельные вкладки и страницы приложения
-# Хранение временных данных и обработка переходов расположены между взаимосвязями
-#
 
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QStackedWidget
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt
-
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QListWidget, QDesktopWidget
+from OneZoneWidget import OneZoneInfo
+import configparser
+import json
 import sys
 
-from HomePage import Home
+
+config = configparser.ConfigParser()
+config.read("config.ini")
+
+SIZE_APP: tuple = eval(config['App'].get('size'))
+TITLE: str = config['App'].get('title')
+JSON_FILE: str = config['App'].get('file')
 
 
-class MyApp(QWidget):
-    def __init__(self):
+
+class MainApp(QWidget):
+    def __init__(self) -> None:
+        '''
+
+        '''
+
         super().__init__()
 
-        self.stacked_widget = QStackedWidget(self)
-        self.stacked_widget.setGeometry(0, 0, 600, 600)
+        # работа с загрузочной информацией (название, положение)
+        self.setWindowTitle(TITLE)
+        self.setGeometry(100, 100, 400, 300)
+        self._center()
 
-        # Создаем виджеты для различных страниц
-        btn = QPushButton("На страницу 2", self, clicked=self.switch_to_page2)
-        self.page1 = Home(btn)
+        self.initUI()
+
+    def _center(self) -> None:
+        '''
+        Отцентрить текущее окно отночительно экрана.
+        '''
+
+        screen = QDesktopWidget().screenGeometry()
+        size = self.geometry()
+        self.move((screen.width() - size.width()) // 2,
+                  (screen.height() - size.height()) // 2)
+
+    def initUI(self) -> None:
+        '''
+        Инициализация пользовательского интерфейса.
+        '''
+
+        self.mainLayout = QVBoxLayout()
+
+        self.listWidget = QListWidget()
+        self.mainLayout.addWidget(self.listWidget)
+
+        with open(JSON_FILE) as file:
+            data = json.load(file)
+            for name in data['zones'].keys():
+                self.listWidget.addItem(name)
+
+        self.listWidget.clicked.connect(self.on_zone_clicked)
+
+        self.setLayout(self.mainLayout)
+
+    def on_zone_clicked(self, index):
         
+        selected_zone = index.data()
+        print(selected_zone)
         
-        self.page2 = QWidget()
-        self.page2_layout = QVBoxLayout(self.page2)
-        self.page2_layout.addWidget(QPushButton("На страницу 1", self, clicked=self.switch_to_page1))
+        with open(JSON_FILE) as file:
+            data = json.load(file)
+            for zone in data['zones'].keys():
+                if zone == selected_zone:
+                    # списко имен хостов
+                    hosts = [data['zones'][zone][i]['host'] for i in data['zones'][zone]]
+                    self.show_zone_info(hosts)
 
-        # Добавляем страницы в QStackedWidget
-        self.stacked_widget.addWidget(self.page1)
-        self.stacked_widget.addWidget(self.page2)
+    def show_zone_info(self, zone_data):
+        # Очищаем текущий макет
+        for i in reversed(range(self.mainLayout.count())):
+            widget = self.mainLayout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
 
-        # Главное окно
-        main_layout = QVBoxLayout(self)
-        main_layout.addWidget(self.stacked_widget)
+        # Создаем новый виджет с информацией о зоне и добавляем его к основному макету
+        zone_info_widget = OneZoneInfo(zone_data)
+        self.mainLayout.addWidget(zone_info_widget)
 
-        
-    def switch_to_page1(self):
-        self.stacked_widget.setCurrentIndex(0)
 
-    def switch_to_page2(self):
-        self.stacked_widget.setCurrentIndex(1)
-
-        
-        
-if __name__ == "__main__":
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    instance = MyApp()
-    instance.show()
+    ex = MainApp()
+    ex.show()
     sys.exit(app.exec_())
