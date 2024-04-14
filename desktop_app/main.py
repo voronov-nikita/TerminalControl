@@ -30,7 +30,7 @@ class MainApp(QWidget):
         # работа с загрузочной информацией (название, положение)
         self.setWindowTitle(TITLE)
         self.setWindowIcon(QIcon(ICON))
-        self.setGeometry(100, 100, 400, 300)
+        self.setGeometry(0, 0, *SIZE_APP)
         self._center()
 
         self.initUI()
