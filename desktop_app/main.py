@@ -1,4 +1,3 @@
-
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QListWidget, QDesktopWidget, \
     QStackedWidget, QScrollArea
 from PyQt5.QtGui import QIcon
