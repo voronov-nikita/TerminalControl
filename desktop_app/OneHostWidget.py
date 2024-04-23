@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QApplicat
     QListWidget, QListWidgetItem, QScrollArea
 
 import configparser
-import json
 import sys
 
 sys.path.append("../")
@@ -50,9 +49,15 @@ class MoreAction(QWidget):
             self.lsWidget.addItem(item)
             self.lsWidget.setItemWidget(item, button)
         
+        item = QListWidgetItem()
+        back_button = QPushButton("Назад")
+        back_button.clicked.connect(self.mainWindow.showHome)
+        self.lsWidget.addItem(item)
+        self.lsWidget.setItemWidget(item, back_button)
         
         layout.addWidget(self.lsWidget)
         self.setLayout(layout)
+        
     
     # Действия описаны здесь
     def connect(self):

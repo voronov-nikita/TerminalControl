@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QApplication,\
-    QListWidget, QListWidgetItem, QScrollArea
+    QListWidget, QListWidgetItem, QStackedWidget
 import sys
+
+from OneHostWidget import MoreAction
 
 sys.path.append("../")
 
@@ -26,15 +28,18 @@ class OneZoneInfo(QWidget):
 
         layout = QVBoxLayout()
 
-        label = QLabel(self.title)
-        layout.addWidget(label)
+        # label = QLabel(self.title)
+        # layout.addWidget(label)
         
         self.lsWidget = QListWidget()
+        
+        self.stackedWidget = QStackedWidget()
+        layout.addWidget(self.stackedWidget)
         
         # добавляем все кнопки из массива хостов
         for elem in self.data:
             button = QPushButton(elem)
-            button.clicked.connect(lambda: print("OK"))
+            button.clicked.connect(self.show_host_action)
             
             item = QListWidgetItem()
             
@@ -52,6 +57,29 @@ class OneZoneInfo(QWidget):
         layout.addWidget(self.lsWidget)
 
         self.setLayout(layout)
+        
+        self.zoneInfoWidgets = []
+        
+    def show_host_action(self) -> None:
+        '''
+        Отредактировать текущий эран на новый путем создания новго экземпляра класса.
+        '''
+
+        # Создаем новый виджет с информацией о зоне и добавляем его к основному макету
+        newWidget = MoreAction(title=self.title, mainWindow=self)
+
+        self.stackedWidget.addWidget(newWidget)
+        self.stackedWidget.setCurrentWidget(newWidget)
+        self.zoneInfoWidgets.append(newWidget)
+        
+    def showHome(self) -> None:
+        '''
+        Изменить текущее активный эллемент на новый или предыдущий из массива последовательности действий.
+        '''
+
+        for widget in self.zoneInfoWidgets:
+            self.stackedWidget.removeWidget(widget)
+        self.stackedWidget.setCurrentWidget(self.lsWidget)
 
 
 if __name__ == '__main__':
