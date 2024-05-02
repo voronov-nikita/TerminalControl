@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QApplication,\
+from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QApplication,\
     QListWidget, QListWidgetItem, QStackedWidget
 import sys
 
@@ -27,9 +27,6 @@ class OneZoneInfo(QWidget):
         '''
 
         layout = QVBoxLayout()
-
-        # label = QLabel(self.title)
-        # layout.addWidget(label)
         
         self.lsWidget = QListWidget()
         
