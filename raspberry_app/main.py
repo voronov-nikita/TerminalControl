@@ -11,7 +11,7 @@ import sys
 sys.path.append("../")
 
 from src.parse import parseData, WakeOnLan, checkDevice
-from src.logic import SpecialAction
+# from src.logic import SpecialAction
 
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
