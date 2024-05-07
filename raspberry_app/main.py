@@ -17,7 +17,6 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 
 
-
 USER: str = "student"
 PASSWORD: str = parseData("../data.json")['users'][USER]
 
@@ -30,21 +29,6 @@ class ManagerSSHAppRaspPi(QMainWindow):
         # # Обновление списка возможных хостов
         self.hostsAll = parseData("../data.json")['zones']
 
-        # Выключить все хосты
-        # self.btnPowerOff.clicked.connect(self.startPoweroff)
-
-        # Запустить все ПК
-        self.btnWOL.clicked.connect(self.enableAll)
-
-        # Открыть сайт на всех ПК из списка хостов
-        # self.btnDownloadSite.clicked.connect(self.sendSitePC)
-
-        # Загрузить файл на ПК
-        # self.btnDownloadFile.clicked.connect(self.downloadFilePC)
-
-    # def startPoweroff(self):
-    #     command = 'poweroff'
-    #     driver(self.hostsAll, command)
 
     def enableAll(self):
         '''
@@ -57,22 +41,6 @@ class ManagerSSHAppRaspPi(QMainWindow):
         
         for mac in self.hostsAll['zone3']:
             WakeOnLan(mac['host'])
-
-    # def sendSitePC(self):
-    #     fname = QFileDialog.getOpenFileName(
-    #         self, 'Выбрать файл с ссылкой', '')[0]
-    #     with open(fname, 'r') as link_file:
-    #         link = link_file.readline()
-    #     command = f"export DISPLAY=:0; echo 'DISPLAY=:0 chromium-browser https://{
-    #         link}' | at now"
-    #     driver(self.hostsAll, command)
-    #     print(link, command)
-
-    # def downloadFilePC(self):
-    #     fname = QFileDialog.getOpenFileName(
-    #         self, 'Выбрать файл для загрузки', '')[0]
-    #     driver_sftp(self.hostsAll, fname)
-    #     print(fname)
 
 
 if __name__ == "__main__":
