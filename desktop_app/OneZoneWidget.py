@@ -7,6 +7,7 @@ from OneHostWidget import MoreAction
 sys.path.append("../")
 
 
+
 class OneZoneInfo(QWidget):
     def __init__(self, title:str, data: list, mainWindow:QWidget) -> None:
         '''
