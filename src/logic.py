@@ -168,20 +168,21 @@ class SpecialAction(Actions):
 
 def start(user, host, password):
     ex = SpecialAction(user, host, password)
-    # ex.openWebBrowser("https://school.mos.ru")
+    ex.openWebBrowser("https://school.mos.ru", otherBrowser='firefox')
     # ex.executeCommand("pkill -f chrome")
-    ex.shutdown()
+    # ex.shutdown()
 
 
 # тестирование функций
 if __name__ == "__main__":
-    ls = parseData("../data.json")["zones"]["zone5"]
-    print(ls)
-    for i in range(1, 13):
-        WakeOnLan(ls[str(i)]['mac'])
-        # try:
-        #     ex = Thread(target=start, args=(
-        #         "student", f"sm1532-2-ip5-{i}.local", "1234"))
-        #     ex.start()
-        # except:
-        #     print(f"Error:", i)
+    ls = parseData("../data2.json")['doname']
+    print(type(ls))
+    for i in ls.values():
+        print(i)
+        # WakeOnLan(ls[str(i)]['mac'])
+        try:
+            ex = Thread(target=start, args=(
+                "student", i, "student"))
+            ex.start()
+        except:
+            print(f"Error:", i)
