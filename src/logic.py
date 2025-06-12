@@ -23,6 +23,8 @@ class Actions():
         self.user = user
         self.host = host
         self.password = password
+        
+        self.connect()
 
     def connect(self) -> None:
         '''
@@ -175,14 +177,14 @@ def start(user, host, password):
 
 # тестирование функций
 if __name__ == "__main__":
-    ls = parseData("../data2.json")['doname']
-    print(type(ls))
+    ls = parseData("../data2.json")['left']
+    print(ls)
+    USER = "student"
+    PASSWORD = "student"
     for i in ls.values():
-        print(i)
-        # WakeOnLan(ls[str(i)]['mac'])
         try:
-            ex = Thread(target=start, args=(
-                "student", i, "student"))
-            ex.start()
+            print("Connect:", i)
+            ex = Actions(USER, i, PASSWORD)
+            ex.executeCommand("")
         except:
-            print(f"Error:", i)
+            print("Error connection:", i)
